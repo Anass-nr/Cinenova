@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineNova — Premium Streaming</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* ===== جميع الأنماط السابقة كما هي (لم تتغير) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --black: #0B0B0B;
+            --black-light: #121212;
+            --black-card: #181818;
+            --emerald: #00C853;
+            --emerald-glow: rgba(0, 200, 83, 0.25);
+            --emerald-dark: #009624;
+            --white: #FFFFFF;
+            --gray: #A0A0A0;
+            --gray-light: #D0D0D0;
+            --gray-dark: #555555;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            --transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--black);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--emerald);
+            border-radius: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s, visibility 0.8s;
+        }
+        #loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 200, 83, 0.08);
+            border-top-color: var(--emerald);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(28px);
+            animation: fadeInUp 0.7s ease forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in-d1 {
+            animation-delay: 0.1s;
+        }
+        .fade-in-d2 {
+            animation-delay: 0.2s;
+        }
+        .fade-in-d3 {
+            animation-delay: 0.3s;
+        }
+        .fade-in-d4 {
+            animation-delay: 0.4s;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 30px;
+            background: rgba(11, 11, 11, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: var(--transition);
+        }
+        .navbar.scrolled {
+            background: rgba(11, 11, 11, 0.94);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+        }
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .logo span {
+            color: var(--emerald);
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .nav-right i {
+            font-size: 1.2rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .nav-right i:hover {
+            color: var(--white);
+        }
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 120px 0 70px;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(0, 200, 83, 0.06), transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(0, 200, 83, 0.03), transparent 50%), var(--black);
+            z-index: 0;
+        }
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+        .hero-content {
+            max-width: 620px;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(0, 200, 83, 0.10);
+            color: var(--emerald);
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid rgba(0, 200, 83, 0.10);
+            margin-bottom: 22px;
+            backdrop-filter: blur(10px);
+        }
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            line-height: 1.08;
+            margin-bottom: 18px;
+            letter-spacing: -2px;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--emerald), #69f0ae);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 440px;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 34px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary {
+            background: var(--emerald);
+            color: var(--black);
+            box-shadow: 0 8px 30px rgba(0, 200, 83, 0.30);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 44px rgba(0, 200, 83, 0.45);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(10px);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.10);
+            transform: translateY(-3px);
+        }
+        .btn .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(0);
+            animation: rippleAnim 0.6s ease-out;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .section-sub {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 36px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .section-header .view-all {
+            color: var(--emerald);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+        .section-header .view-all:hover {
+            color: #69f0ae;
+        }
+        section {
+            padding: 60px 0;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 28px;
+        }
+        .movie-card {
+            background: var(--black-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            position: relative;
+        }
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 24px 56px rgba(0, 0, 0, 0.7);
+            border-color: rgba(0, 200, 83, 0.12);
+        }
+        .movie-card .poster {
+            aspect-ratio: 2/3;
+            background: linear-gradient(145deg, #1a1a1a, #0e0e0e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--gray-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        .movie-card .poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .movie-card:hover .poster img {
+            transform: scale(1.05);
+        }
+        .movie-card .poster .play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+            backdrop-filter: blur(3px);
+        }
+        .movie-card:hover .poster .play-overlay {
+            opacity: 1;
+        }
+        .movie-card .poster .play-overlay i {
+            font-size: 2.6rem;
+            color: var(--white);
+            background: var(--emerald);
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(0, 200, 83, 0.35);
+            transition: var(--transition);
+        }
+        .movie-card:hover .poster .play-overlay i {
+            transform: scale(1.08);
+        }
+        .movie-card .info {
+            padding: 18px 20px 22px;
+        }
+        .movie-card .info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+        }
+        .movie-card .info .meta {
+            display: flex;
+            gap: 10px;
+            font-size: 0.75rem;
+            color: var(--gray);
+            flex-wrap: wrap;
+        }
+        .movie-card .info .meta .dot {
+            color: var(--gray-dark);
+        }
+        .movie-card .info .meta .rating {
+            color: #f5c518;
+        }
+        .detail-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            overflow-y: auto;
+            animation: detailFade 0.35s ease;
+        }
+        .detail-overlay.active {
+            display: flex;
+        }
+        @keyframes detailFade {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .detail-content {
+            max-width: 850px;
+            width: 92%;
+            background: var(--black-card);
+            border-radius: 24px;
+            padding: 40px 36px 44px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.85);
+            max-height: 92vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .detail-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .detail-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .detail-content::-webkit-scrollbar-thumb {
+            background: var(--emerald);
+            border-radius: 10px;
+        }
+        .detail-close {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: var(--gray);
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: var(--transition);
+            line-height: 1;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .detail-close:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.10);
+            transform: rotate(90deg);
+        }
+        .detail-poster {
+            width: 200px;
+            flex-shrink: 0;
+            margin-bottom: 24px;
+        }
+        .detail-poster img {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+            background: #1a1a1a;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+        }
+        .detail-title {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .detail-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .detail-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--gray-light);
+            letter-spacing: 0.2px;
+            backdrop-filter: blur(4px);
+        }
+        .detail-badge i {
+            font-size: 0.7rem;
+            color: var(--emerald);
+        }
+        .detail-badge .rating-star {
+            color: #f5c518;
+        }
+        .detail-description {
+            color: #C8C8C8;
+            line-height: 1.8;
+            font-size: 0.98rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        .detail-watch-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 48px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            background: var(--emerald);
+            color: var(--black);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 8px 32px rgba(0, 200, 83, 0.30);
+            width: 100%;
+            max-width: 320px;
+        }
+        .detail-watch-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 48px rgba(0, 200, 83, 0.45);
+        }
+        .detail-watch-btn i {
+            font-size: 1rem;
+        }
+        footer {
+            background: var(--black-light);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 36px 0;
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--gray-dark);
+            letter-spacing: 0.3px;
+        }
+        .footer-bottom span {
+            display: inline-block;
+        }
+        .back-top {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--emerald);
+            color: var(--black);
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 200, 83, 0.25);
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            z-index: 999;
+        }
+        .back-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .back-top:hover {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 14px 40px rgba(0, 200, 83, 0.35);
+        }
+        @media (max-width: 1024px) {
+            .movies-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 22px;
+            }
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 14px 20px;
+            }
+            .container {
+                padding: 0 20px;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 18px;
+            }
+            .hero {
+                min-height: 70vh;
+                padding: 100px 0 50px;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 0.98rem;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            section {
+                padding: 44px 0;
+            }
+            .detail-content {
+                padding: 30px 20px 34px;
+                width: 94%;
+                border-radius: 20px;
+                max-height: 94vh;
+            }
+            .detail-poster {
+                width: 150px;
+                margin-bottom: 18px;
+            }
+            .detail-title {
+                font-size: 1.5rem;
+                margin-bottom: 14px;
+            }
+            .detail-badges {
+                gap: 8px;
+                margin-bottom: 18px;
+            }
+            .detail-badge {
+                font-size: 0.7rem;
+                padding: 4px 14px;
+            }
+            .detail-description {
+                font-size: 0.9rem;
+                margin-bottom: 24px;
+                line-height: 1.7;
+            }
+            .detail-watch-btn {
+                padding: 14px 32px;
+                font-size: 0.95rem;
+                max-width: 100%;
+            }
+            .detail-close {
+                top: 14px;
+                right: 16px;
+                width: 38px;
+                height: 38px;
+                font-size: 1.3rem;
+            }
+            footer {
+                padding: 28px 0;
+            }
+            .footer-bottom {
+                font-size: 0.75rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .detail-poster {
+                width: 130px;
+            }
+            .detail-title {
+                font-size: 1.3rem;
+            }
+            .detail-content {
+                padding: 24px 16px 28px;
+            }
+            .detail-badge {
+                font-size: 0.65rem;
+                padding: 3px 12px;
+            }
+            .detail-description {
+                font-size: 0.85rem;
+            }
+            .detail-watch-btn {
+                font-size: 0.9rem;
+                padding: 13px 24px;
+            }
+            .movie-card .info {
+                padding: 14px 14px 18px;
+            }
+            .movie-card .info h3 {
+                font-size: 0.85rem;
+            }
+            .movie-card .info .meta {
+                font-size: 0.65rem;
+            }
+        }
+        @media (min-width: 769px) {
+            .detail-poster {
+                width: 220px;
+                margin-bottom: 28px;
+            }
+            .detail-title {
+                font-size: 2.2rem;
+            }
+        }
+        @media (min-width: 1025px) {
+            .detail-poster {
+                width: 240px;
+            }
+            .detail-title {
+                font-size: 2.4rem;
+            }
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-1 {
+            margin-top: 8px;
+        }
+        .mt-2 {
+            margin-top: 16px;
+        }
+        .mt-3 {
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LOADING ===== -->
+    <div id="loading">
+        <div class="loader"></div>
+    </div>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="logo">Cine<span>Nova</span></div>
+            <div class="nav-right">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content fade-in">
+                <span class="hero-badge fade-in fade-in-d1">✦ Now Streaming</span>
+                <h1 class="fade-in fade-in-d2">
+                    Unlimited Movies.<br />
+                    <span class="highlight">Unlimited Entertainment.</span>
+                </h1>
+                <p class="fade-in fade-in-d3">
+                    Watch the latest blockbuster movies with a beautiful, premium streaming experience.
+                </p>
+                <div class="hero-buttons fade-in fade-in-d4">
+                    <a href="#movies" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Browse Movies
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURED MOVIES ===== -->
+    <section id="movies">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Featured Movies</h2>
+                    <p class="section-sub">Handpicked premium content just for you</p>
+                </div>
+                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="movies-grid" id="moviesGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <span>&copy; 2026 CineNova. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== BACK TO TOP ===== -->
+    <button class="back-top" id="backTop" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ===== DETAIL OVERLAY ===== -->
+    <div class="detail-overlay" id="detailOverlay">
+        <div class="detail-content" id="detailContent">
+            <button class="detail-close" id="detailClose">&times;</button>
+            <div class="detail-poster">
+                <img id="detailPoster" src="" alt="Movie poster" />
+            </div>
+            <h2 class="detail-title" id="detailTitle">Movie Title</h2>
+            <div class="detail-badges">
+                <span class="detail-badge"><i class="far fa-calendar-alt"></i> <span id="detailYear">2026</span></span>
+                <span class="detail-badge"><span class="rating-star"><i class="fas fa-star"></i></span> <span id="detailRating">8.5</span></span>
+                <span class="detail-badge"><i class="far fa-clock"></i> <span id="detailDuration">2h 15m</span></span>
+                <span class="detail-badge"><i class="fas fa-film"></i> <span id="detailQuality">4K</span></span>
+            </div>
+            <p class="detail-description" id="detailDescription">
+                A breathtaking cinematic journey filled with suspense, drama, and unforgettable performances.
+            </p>
+            <a href="#" class="detail-watch-btn" id="detailWatchBtn">
+                <i class="fas fa-play"></i> Watch Movie
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // MOVIE DATA — 10 MOVIES (ALL 2026 except The Sheep Detectives)
+        // ================================================================
+        const movieData = [{
+            id: 1,
+            title: 'Toy Story 5',
+            year: 2026,
+            genre: 'Animation, Adventure, Comedy',
+            rating: '7.5',
+            duration: '1h 42m',
+            quality: '4K',
+            description: 'When Bonnie receives a Lilypad tablet as a gift and becomes obsessed, Buzz, Woody, Jessie and the rest of the gang\'s jobs become exponentially harder when they have to go head to head with the all-new threat to playtime.',
+            poster: 'https://image.tmdb.org/t/p/original/sfQtVlIHljToOwYjhe21KPGzZWK.jpg',
+            watchLink: 'https://streamimdb.ru/embed/movie/tt29355505'
+        }, {
+            id: 2,
+            title: 'The Sheep Detectives',
+            year: 2025,
+            genre: 'Animation, Comedy, Mystery',
+            rating: '7.4',
+            duration: '1h 49m',
+            quality: 'HD',
+            description: 'George Hardy is a shepherd who reads detective novels to his beloved sheep every night, assuming they can\'t possibly understand. But when a mysterious incident disrupts life on the farm, the sheep realize they must become the detectives. As they follow the clues and investigate human suspects, they prove that even sheep can be brilliant crime-solvers.',
+            poster: 'https://image.tmdb.org/t/p/original/TEaSqmI6TZQVimULYbingDIdXT.jpg',
+            watchLink: 'https://streamimdb.ru/embed/movie/tt32565993'
+        }, {
+            id: 3,
+            title: 'Spider-Man: Brand New Day',
+            year: 2026,
+            genre: 'Action, Adventure, Sci-Fi',
+            rating: '8.0',
+            duration: '2h 10m',
+            quality: '4K',
+            description: 'Fighting crime full-time as Spider-Man in a world that doesn\'t remember him—and the pressure of seeing his old friends move on without him—sparks a change in Peter Parker he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat to the city and those he loves — a powerful villain no one can even see.',
+            poster: 'https://image.tmdb.org/t/p/original/yyB2VJEW3an2xCdcYCPQhn9QERR.jpg',
+            watchLink: '#'
+        }, {
+            id: 4,
+            title: 'Moana (Live-Action)',
+            year: 2026,
+            genre: 'Adventure, Comedy, Family',
+            rating: '5.4',
+            duration: '1h 51m',
+            quality: '4K',
+            description: 'Moana, the daughter of the chief of Motunui, is chosen by the ocean to embark on a perilous journey across the high seas with the demigod Maui to save her homeland from an ancient curse. A live-action reimagining of the beloved Disney animated classic.',
+            poster: 'https://image.tmdb.org/t/p/original/7rY0Q9LqVqVqVqVqVqVqVqVqVq.jpg',
+            watchLink: 'https://player.cinezo.live/embed/movie/1108427?autoplay=false&poster=true&chromecast=true&servericon=true&setting=true&pip=true&font=Roboto&fontcolor=6f63ff&fontsize=20&opacity=0.5&primarycolor=e8b86d&secondarycolor=0a0a12&iconcolor=ffffff'
+        }, {
+            id: 5,
+            title: 'Avatar: The Seed Bearer',
+            year: 2026,
+            genre: 'Sci-Fi, Adventure',
+            rating: '8.2',
+            duration: '2h 45m',
+            quality: '4K',
+            description: 'Jake Sully and Neytiri face a new threat to Pandora as a mysterious seed-bearing entity emerges, forcing the Na\'vi to unite with unlikely allies to protect their world and the future of all life.',
+            poster: 'https://image.tmdb.org/t/p/original/2ZddN6i5yP8KHvPqI6bJ5qVwVvJ.jpg',
+            watchLink: '#'
+        }, {
+            id: 6,
+            title: 'Avengers: Secret Wars',
+            year: 2026,
+            genre: 'Action, Adventure, Sci-Fi',
+            rating: '8.7',
+            duration: '2h 50m',
+            quality: '4K',
+            description: 'The multiverse is collapsing as the Avengers face their greatest challenge yet—an incursion that brings together heroes and villains from across realities in a battle for the very existence of all universes.',
+            poster: 'https://image.tmdb.org/t/p/original/5rY0Q9LqVqVqVqVqVqVqVqVqVq.jpg',
+            watchLink: '#'
+        }, {
+            id: 7,
+            title: 'The Batman – Part II',
+            year: 2026,
+            genre: 'Action, Crime, Drama',
+            rating: '8.5',
+            duration: '2h 40m',
+            quality: '4K',
+            description: 'Bruce Wayne continues his war on crime as Gotham\'s dark knight, facing a new adversary who threatens to expose the city\'s deepest corruption and force Batman to confront his own limits.',
+            poster: 'https://image.tmdb.org/t/p/original/6rY0Q9LqVqVqVqVqVqVqVqVqVq.jpg',
+            watchLink: '#'
+        }, {
+            id: 8,
+            title: 'Dune: Part Three',
+            year: 2026,
+            genre: 'Sci-Fi, Adventure',
+            rating: '8.6',
+            duration: '2h 55m',
+            quality: '4K',
+            description: 'Paul Atreides continues his journey as Emperor of the Known Universe, facing the consequences of his rise to power and the galactic war that threatens to consume everything he has built.',
+            poster: 'https://image.tmdb.org/t/p/original/7rY0Q9LqVqVqVqVqVqVqVqVqVq.jpg',
+            watchLink: '#'
+        }, {
+            id: 9,
+            title: 'Star Wars: New Jedi Order',
+            year: 2026,
+            genre: 'Sci-Fi, Adventure, Fantasy',
+            rating: '8.3',
+            duration: '2h 30m',
+            quality: '4K',
+            description: 'A new generation of Jedi rises under the leadership of Rey Skywalker, as an ancient evil from the Unknown Regions threatens to plunge the galaxy into darkness once more.',
+            poster: 'https://image.tmdb.org/t/p/original/8rY0Q9LqVqVqVqVqVqVqVqVqVq.jpg',
+            watchLink: '#'
+        }, {
+            id: 10,
+            title: 'Jurassic World: Rebirth',
+            year: 2026,
+            genre: 'Action, Adventure, Sci-Fi',
+            rating: '7.7',
+            duration: '2h 10m',
+            quality: '4K',
+            description: 'A new team of scientists and explorers must venture into the wildest corners of the planet to find a cure for a deadly virus, only to discover that dinosaurs have evolved in terrifying new ways.',
+            poster: 'https://image.tmdb.org/t/p/original/10rY0Q9LqVqVqVqVqVqVqVqVqVq.jpg',
+            watchLink: '#'
+        }];
+
+        // ================================================================
+        // RENDER MOVIES GRID
+        // ================================================================
+        const grid = document.getElementById('moviesGrid');
+
+        movieData.forEach(movie => {
+            const card = createMovieCard(movie);
+            grid.appendChild(card);
+        });
+
+        function createMovieCard(movie) {
+            const div = document.createElement('div');
+            div.className = 'movie-card';
+            div.innerHTML = `
+                <div class="poster">
+                    <img src="${movie.poster}" alt="${movie.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450/1a1a1a/444?text=${encodeURIComponent(movie.title)}'" />
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="info">
+                    <h3>${movie.title}</h3>
+                    <div class="meta">
+                        <span>${movie.year}</span>
+                        <span class="dot">•</span>
+                        <span class="rating">⭐ ${movie.rating}</span>
+                    </div>
+                </div>
+            `;
+            div.addEventListener('click', () => openDetail(movie.id));
+            return div;
+        }
+
+        // ================================================================
+        // DETAIL OVERLAY
+        // ================================================================
+        const overlay = document.getElementById('detailOverlay');
+        const closeBtn = document.getElementById('detailClose');
+
+        function openDetail(id) {
+            const movie = movieData.find(m => m.id === id);
+            if (!movie) return;
+
+            document.getElementById('detailPoster').src = movie.poster;
+            document.getElementById('detailPoster').onerror = function() {
+                this.src = 'https://via.placeholder.com/300x450/1a1a1a/444?text=' + encodeURIComponent(movie.title);
+            };
+            document.getElementById('detailTitle').textContent = movie.title;
+            document.getElementById('detailYear').textContent = movie.year;
+            document.getElementById('detailRating').textContent = movie.rating;
+            document.getElementById('detailDuration').textContent = movie.duration;
+            document.getElementById('detailQuality').textContent = movie.quality;
+            document.getElementById('detailDescription').textContent = movie.description;
+            document.getElementById('detailWatchBtn').href = movie.watchLink;
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetail() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeDetail);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeDetail();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDetail();
+        });
+
+        // ================================================================
+        // NAVBAR SCROLL EFFECT
+        // ================================================================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            const backTop = document.getElementById('backTop');
+            if (window.scrollY > 500) {
+                backTop.classList.add('visible');
+            } else {
+                backTop.classList.remove('visible');
+            }
+        });
+
+        document.getElementById('backTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ================================================================
+        // BUTTON RIPPLE
+        // ================================================================
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // ================================================================
+        // LOADING
+        // ================================================================
+        window.addEventListener('load', () => {
+            document.getElementById('loading').classList.add('hidden');
+        });
+
+        // ================================================================
+        // SMOOTH SCROLL
+        // ================================================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
